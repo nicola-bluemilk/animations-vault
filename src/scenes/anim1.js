@@ -100,7 +100,6 @@ const material = new THREE.ShaderMaterial({
   `
 });
 
-
 const cube = new THREE.Mesh(geometry, material);
 
 scene.add(cube);
@@ -136,7 +135,7 @@ function animate() {
   cube.rotation.x += 0.005;
   cube.rotation.y += 0.005;
   material.uniforms.time.value += 0.05;
-  
+
   renderer.render(scene, camera);
 }
 
