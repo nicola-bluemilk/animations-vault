@@ -13,7 +13,7 @@ function getSize() {
 }
 
 // =====================
-// SCENE (better depth)
+// SCENE
 // =====================
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a0a10);
@@ -24,47 +24,60 @@ scene.fog = new THREE.Fog(0x0a0a10, 2, 14);
 // =====================
 const { width, height } = getSize();
 
-const camera = new THREE.PerspectiveCamera(
-  60,
-  width / height,
-  0.1,
-  100
-);
-
+const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 100);
 camera.position.set(0, 0, 7);
 
 // =====================
-// RENDERER
+// RENDERER (IMPORTANT: better shading feel)
 // =====================
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(width, height);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.25;
 container.appendChild(renderer.domElement);
 
 // =====================
-// LIGHT (much better look)
+// LIGHTING (GLOBAL UPGRADE)
 // =====================
-scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
-const key = new THREE.DirectionalLight(0xffffff, 1.4);
-key.position.set(5, 6, 5);
+const key = new THREE.DirectionalLight(0xffffff, 2.5);
+key.position.set(5, 6, 4);
 scene.add(key);
 
-const rim = new THREE.DirectionalLight(0x4aa3ff, 1.0);
-rim.position.set(-6, 2, -4);
+const rim = new THREE.DirectionalLight(0x88aaff, 1.5);
+rim.position.set(-6, 2, -5);
 scene.add(rim);
 
 // =====================
-// COFFEE BEANS
+// ENVIRONMENT (SOFT REFLECTIONS)
 // =====================
-const COUNT = 700;
+const env = new THREE.CubeTextureLoader().load([
+  'https://threejs.org/examples/textures/cube/skybox/px.jpg',
+  'https://threejs.org/examples/textures/cube/skybox/nx.jpg',
+  'https://threejs.org/examples/textures/cube/skybox/py.jpg',
+  'https://threejs.org/examples/textures/cube/skybox/ny.jpg',
+  'https://threejs.org/examples/textures/cube/skybox/pz.jpg',
+  'https://threejs.org/examples/textures/cube/skybox/nz.jpg'
+]);
 
-const geometry = new THREE.SphereGeometry(0.09, 14, 14);
+scene.environment = env;
+
+// =====================
+// COFFEE BEANS (HIGHER QUALITY LOOK)
+// =====================
+const COUNT = 900;
+
+// bigger + more segments = less “low poly feel”
+const geometry = new THREE.IcosahedronGeometry(0.12, 2);
 
 const material = new THREE.MeshStandardMaterial({
   color: 0x6b4a3a,
-  roughness: 0.8,
-  metalness: 0.05
+  roughness: 0.55,
+  metalness: 0.1,
+  envMapIntensity: 1.4
 });
 
 const mesh = new THREE.InstancedMesh(geometry, material, COUNT);
@@ -73,36 +86,32 @@ scene.add(mesh);
 const temp = new THREE.Object3D();
 
 // =====================
-// WORLD SETTINGS
+// FLOW SETTINGS (SLOW + SMOOTH)
 // =====================
 const boundsX = 6;
-const boundsY = 2.2;
+const boundsY = 2.4;
 
-// IMPORTANT: slower flow
-const baseSpeed = 0.0022;
+// MUCH slower than before
+const baseSpeed = 0.01;
 
 // =====================
-// PARTICLES STATE
+// STATE
 // =====================
 const pos = [];
 const vel = [];
 
-function respawn(i, resetX = true) {
-  pos[i] = new THREE.Vector3(
-    resetX ? -boundsX - Math.random() * 2 : (Math.random() - 0.5) * 10,
-    (Math.random() - 0.5) * boundsY * 2,
-    (Math.random() - 0.5) * 0.5
-  );
-
-  vel[i] = new THREE.Vector3(
-    baseSpeed + Math.random() * 0.001,
-    (Math.random() - 0.5) * 0.0008,
-    0
-  );
-}
-
+// distribute evenly to avoid “gaps”
 for (let i = 0; i < COUNT; i++) {
-  respawn(i, false);
+  const x = THREE.MathUtils.lerp(-boundsX, boundsX, i / COUNT);
+  const y = (Math.random() - 0.5) * boundsY * 2;
+
+  pos.push(new THREE.Vector3(x, y, 0));
+
+  vel.push(new THREE.Vector3(
+    baseSpeed,
+    (Math.random() - 0.5) * 0.0003,
+    0
+  ));
 }
 
 // =====================
@@ -114,8 +123,8 @@ const mouseWorld = new THREE.Vector3();
 
 const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
 
-// bigger & softer sphere
-const forceRadius = 3.2;
+// bigger sphere feel
+const forceRadius = 3.5;
 
 window.addEventListener('mousemove', (e) => {
   const rect = renderer.domElement.getBoundingClientRect();
@@ -142,49 +151,52 @@ function animate() {
     const v = vel[i];
 
     // =====================
-    // VERY SLOW FLOW (river)
+    // VERY SMOOTH FLOW (NO SPIKES)
     // =====================
-    v.x += baseSpeed;
-    v.y += Math.sin(t * 0.2 + p.x) * 0.00015;
+    v.x = baseSpeed * (0.8 + Math.sin(t * 0.1) * 0.2);
+    v.y += Math.sin(t * 0.2 + i * 0.01) * 0.00005;
 
-    v.multiplyScalar(0.985);
+    v.multiplyScalar(0.98);
 
     p.add(v);
 
     // =====================
-    // MOUSE INTERACTION (soft but visible)
+    // MOUSE FORCE (SMOOTHER)
     // =====================
     const d = p.clone().sub(mouseWorld);
     const dist = d.length();
 
     if (dist < forceRadius) {
-      const strength = 1.0 - dist / forceRadius;
+      const s = 1.0 - dist / forceRadius;
 
       d.normalize();
 
       const swirl = new THREE.Vector3(-d.y, d.x, 0);
 
-      p.add(d.multiplyScalar(strength * 0.08));
-      p.add(swirl.multiplyScalar(strength * 0.05));
+      p.add(d.multiplyScalar(s * 0.04));
+      p.add(swirl.multiplyScalar(s * 0.03));
     }
 
     // =====================
-    // REMOVE WRAP → REAL SPAWN SYSTEM
+    // CONTINUOUS FLOW (NO GAPS)
     // =====================
     if (p.x > boundsX) {
-      respawn(i, true); // NEW particles
-      continue;
+      p.x = -boundsX;
+      p.y = (Math.random() - 0.5) * boundsY * 2;
     }
 
-    // optional vertical clamp
-    p.y = THREE.MathUtils.clamp(p.y, -boundsY, boundsY);
+    if (p.x < -boundsX) {
+      p.x = boundsX;
+      p.y = (Math.random() - 0.5) * boundsY * 2;
+    }
 
     // =====================
-    // RENDER INSTANCE
+    // RENDER
     // =====================
     temp.position.copy(p);
 
-    temp.rotation.y = t * 0.15;
+    // subtle rotation = realism
+    temp.rotation.y = t * 0.1;
 
     temp.updateMatrix();
     mesh.setMatrixAt(i, temp.matrix);
