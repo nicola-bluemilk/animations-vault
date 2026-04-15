@@ -17,7 +17,9 @@ export default defineConfig({
         anim5: resolve(__dirname, 'animazioni/anim5.html'),
         anim6: resolve(__dirname, 'animazioni/anim6.html'),
         anim7: resolve(__dirname, 'animazioni/anim7.html'),
-        anim8: resolve(__dirname, 'animazioni/anim8.html')
+        anim8: resolve(__dirname, 'animazioni/anim8.html'),
+        anim9: resolve(__dirname, 'animazioni/anim9.html'),
+        anim10: resolve(__dirname, 'animazioni/anim10.html')
       }
     }
   }
