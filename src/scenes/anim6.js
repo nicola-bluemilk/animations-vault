@@ -264,11 +264,14 @@ const bloom = new UnrealBloomPass(
 composer.addPass(bloom);
 
 // UI MODE SWITCH
-select.addEventListener('change', () => {
-  if (select.value === 'realistic') material.uniforms.mode.value = 0;
-  else if (select.value === 'stylized') material.uniforms.mode.value = 1;
+function syncModeWithSelect() {
+  if (select.value === 'stylized') material.uniforms.mode.value = 0;
+  else if (select.value === 'realistic') material.uniforms.mode.value = 1;
   else material.uniforms.mode.value = 2;
-});
+}
+
+select.addEventListener('change', syncModeWithSelect);
+syncModeWithSelect();
 
 // LOOP
 function animate() {

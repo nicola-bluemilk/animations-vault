@@ -19,72 +19,166 @@
             Ogni animazione vive su una route HTML separata, con navigazione condivisa e
             struttura pronta per crescere senza accumulare scene nella home.
           </p>
+
+          <details class="project-guide">
+            <summary class="project-guide-toggle">
+              <span class="guide-open-label">Apri guida progetto</span>
+              <span class="guide-close-label">Chiudi guida progetto</span>
+            </summary>
+
+            <div class="project-guide-panel" role="dialog" aria-label="Guida progetto">
+              <p class="eyebrow">Guida Rapida</p>
+              <h2>Come usare e integrare queste animazioni</h2>
+              <p class="project-guide-copy">
+                Animation Vault e' una raccolta di scene Three.js separate, ciascuna con pagina
+                dedicata, file JavaScript autonomo e asset condivisi. L'obiettivo e' poterle
+                provare qui e spostarle facilmente in un altro progetto.
+              </p>
+
+              <div class="project-guide-grid">
+                <article class="guide-block">
+                  <h3>Come funziona</h3>
+                  <ul>
+                    <li>La home raccoglie tutte le animazioni disponibili.</li>
+                    <li>Ogni `animazioni/animX.html` carica una sola scena.</li>
+                    <li>Ogni `src/scenes/animX.js` contiene la logica Three.js della scena.</li>
+                    <li>Texture e modelli vivono in `public/textures/` e `public/models/`.</li>
+                  </ul>
+                </article>
+
+                <article class="guide-block">
+                  <h3>Avvio locale</h3>
+                  <ol>
+                    <li>Installa le dipendenze con `npm install`.</li>
+                    <li>Avvia il progetto con `npm run dev`.</li>
+                    <li>Crea la build con `npm run build` quando serve.</li>
+                  </ol>
+                </article>
+
+                <article class="guide-block wide-block">
+                  <h3>Integrare una animazione in un altro progetto</h3>
+                  <ol>
+                    <li>Installa `three` nel progetto di destinazione.</li>
+                    <li>Copia il file scena che ti interessa da `src/scenes/animX.js`.</li>
+                    <li>Crea un container HTML con l'id richiesto, ad esempio `animX`.</li>
+                    <li>Copia gli asset necessari da `public/textures/` o `public/models/`.</li>
+                    <li>Aggiorna i percorsi degli asset se cambiano cartelle o URL.</li>
+                    <li>Monta la scena dentro la tua route o componente mantenendo il container corretto.</li>
+                  </ol>
+                </article>
+
+                <article class="guide-block wide-block">
+                  <h3>Cosa controllare dopo la copia</h3>
+                  <ul>
+                    <li>Il container della scena deve esistere davvero nel DOM.</li>
+                    <li>I file statici devono mantenere percorsi validi.</li>
+                    <li>Camera e renderer devono leggere le dimensioni del container giusto.</li>
+                    <li>Gli import `three/examples/jsm/...` devono essere supportati dal bundler finale.</li>
+                  </ul>
+                </article>
+              </div>
+            </div>
+          </details>
         </section>
 
-        <section class="gallery-grid" aria-label="Collezione animazioni">
-          <article class="gallery-card accent-amber">
-            <p class="card-index">01</p>
-            <h2>Textured Cube</h2>
-            <p>
-              Cubo con texture hardwood, luce direzionale e interazione diretta sul mesh.
-            </p>
-            <a class="card-link" href="./animazioni/anim1.html">Apri pagina</a>
-          </article>
+        <section class="gallery-section" aria-labelledby="scene-section-title">
+          <div class="section-heading">
+            <p class="eyebrow">Scene</p>
+            <h2 id="scene-section-title">Animazioni separate e riutilizzabili</h2>
+          </div>
 
-          <article class="gallery-card accent-sky">
-            <p class="card-index">02</p>
-            <h2>Rolex Viewer</h2>
-            <p>
-              Viewer 3D del modello GLB con Draco, illuminazione morbida e interazione sul modello.
-            </p>
-            <a class="card-link" href="./animazioni/anim2.html">Apri pagina</a>
-          </article>
+          <div class="gallery-grid" aria-label="Collezione scene">
+            <article class="gallery-card accent-amber">
+              <p class="card-index">01</p>
+              <h2>Textured Cube</h2>
+              <p>
+                Cubo con texture hardwood, luce direzionale e interazione diretta sul mesh.
+              </p>
+              <a class="card-link" href="./animazioni/anim1.html">Apri pagina</a>
+            </article>
 
-          <article class="gallery-card accent-coral">
-            <p class="card-index">03</p>
-            <h2>Shader Cube</h2>
-            <p>
-              Versione shader con onda animata e variazione cromatica nel fragment shader.
-            </p>
-            <a class="card-link" href="./animazioni/anim3.html">Apri pagina</a>
-          </article>
+            <article class="gallery-card accent-sky">
+              <p class="card-index">02</p>
+              <h2>Rolex Viewer</h2>
+              <p>
+                Viewer 3D del modello GLB con Draco, illuminazione morbida e interazione sul modello.
+              </p>
+              <a class="card-link" href="./animazioni/anim2.html">Apri pagina</a>
+            </article>
 
-          <article class="gallery-card accent-mint">
-            <p class="card-index">04</p>
-            <h2>Part Selector</h2>
-            <p>
-              Viewer con raycast su mesh singole, per selezionare una parte alla volta del modello.
-            </p>
-            <a class="card-link" href="./animazioni/anim4.html">Apri pagina</a>
-          </article>
+            <article class="gallery-card accent-coral">
+              <p class="card-index">03</p>
+              <h2>Shader Cube</h2>
+              <p>
+                Versione shader con onda animata e variazione cromatica nel fragment shader.
+              </p>
+              <a class="card-link" href="./animazioni/anim3.html">Apri pagina</a>
+            </article>
 
-          <article class="gallery-card accent-gold">
-            <p class="card-index">05</p>
-            <h2>Hotspot Notes</h2>
-            <p>
-              Viewer con punti cliccabili, focus sul dettaglio scelto e scheda informativa collegata.
-            </p>
-            <a class="card-link" href="./animazioni/anim5.html">Apri pagina</a>
-          </article>
+            <article class="gallery-card accent-mint">
+              <p class="card-index">04</p>
+              <h2>Part Selector</h2>
+              <p>
+                Viewer con raycast su mesh singole, per selezionare una parte alla volta del modello.
+              </p>
+              <a class="card-link" href="./animazioni/anim4.html">Apri pagina</a>
+            </article>
 
-          <article class="gallery-card accent-sky">
-            <p class="card-index">06</p>
-            <h2>Water Shader</h2>
-            <p>
-              Superficie d’acqua shader con modalita visive selezionabili e resa piu cinematica.
-            </p>
-            <a class="card-link" href="./animazioni/anim6.html">Apri pagina</a>
-          </article>
+            <article class="gallery-card accent-gold">
+              <p class="card-index">05</p>
+              <h2>Hotspot Notes</h2>
+              <p>
+                Viewer con punti cliccabili, focus sul dettaglio scelto e scheda informativa collegata.
+              </p>
+              <a class="card-link" href="./animazioni/anim5.html">Apri pagina</a>
+            </article>
 
-          <article class="gallery-card accent-forest">
-            <p class="card-index">Asset</p>
-            <h2>Modelli 3D</h2>
-            <p>
-              Pagina dedicata alla libreria dei modelli GLB presenti in public/models, con accesso
-              diretto ai file disponibili nel progetto.
-            </p>
-            <a class="card-link" href="./modelli.html">Apri archivio</a>
-          </article>
+            <article class="gallery-card accent-sky">
+              <p class="card-index">06</p>
+              <h2>Water Shader</h2>
+              <p>
+                Superficie d’acqua shader con modalita visive selezionabili e resa piu cinematica.
+              </p>
+              <a class="card-link" href="./animazioni/anim6.html">Apri pagina</a>
+            </article>
+
+            <article class="gallery-card accent-coral">
+              <p class="card-index">07</p>
+              <h2>Neon Torus</h2>
+              <p>
+                Toro animato con materiale emissive, doppia luce colorata e navigazione orbitale.
+              </p>
+              <a class="card-link" href="./animazioni/anim7.html">Apri pagina</a>
+            </article>
+
+            <article class="gallery-card accent-mint">
+              <p class="card-index">08</p>
+              <h2>Scena Cinematografica</h2>
+              <p>
+                Scena cinematografica con fog, luci e bloom per una resa piu atmosferica e profonda.
+              </p>
+              <a class="card-link" href="./animazioni/anim8.html">Apri pagina</a>
+            </article>
+          </div>
+        </section>
+
+        <section class="gallery-section" aria-labelledby="asset-section-title">
+          <div class="section-heading">
+            <p class="eyebrow">Assets</p>
+            <h2 id="asset-section-title">Modelli e risorse di supporto</h2>
+          </div>
+
+          <div class="gallery-grid" aria-label="Collezione asset">
+            <article class="gallery-card accent-forest">
+              <p class="card-index">Asset</p>
+              <h2>Modelli 3D</h2>
+              <p>
+                Pagina dedicata alla libreria dei modelli GLB presenti in public/models, con accesso
+                diretto ai file disponibili nel progetto.
+              </p>
+              <a class="card-link" href="./modelli.html">Apri archivio</a>
+            </article>
+          </div>
         </section>
       </main>
     </div>
