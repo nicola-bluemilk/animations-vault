@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animation Vault | Coffee Mat</title>
+    <link rel="stylesheet" href="../src/style.css" />
+    <script type="module" src="../src/site-header.js"></script>
+  </head>
+  <body class="model-viewer-page">
+    <div class="page-shell">
+      <site-header data-base-path="../" data-current="models" data-compact="true"></site-header>
+
+      <main class="animation-layout">
+        <section class="animation-copy">
+          <p class="eyebrow">Modello 03</p>
+          <h1>Coffee Mat</h1>
+          <p>
+            Viewer dedicato all’accessorio tabletop, pronto da usare come base o complemento per
+            composizioni prodotto più complesse.
+          </p>
+          <p class="file-pill">public/models/coffeemat.glb</p>
+          <div class="panel-actions">
+            <a class="card-link" href="/models/coffeemat.glb" target="_blank" rel="noreferrer">Scarica file</a>
+            <a class="back-link" href="../modelli.html">Torna ai modelli</a>
+          </div>
+        </section>
+
+        <section
+          id="model-stage"
+          class="animation-stage light-stage"
+          data-model-url="/models/coffeemat.glb"
+          aria-label="Viewer modello Coffee Mat"
+        ></section>
+      </main>
+    </div>
+
+    <script type="module" src="../src/model-viewer.js"></script>
+  </body>
+</html>

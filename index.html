@@ -5,22 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Animation Vault</title>
     <link rel="stylesheet" href="./src/style.css" />
+    <script type="module" src="./src/site-header.js"></script>
   </head>
   <body class="home-page">
     <div class="page-shell">
-      <header class="site-header">
-        <a class="brand" href="./index.html">Animation Vault</a>
-        <nav class="site-nav" aria-label="Navigazione principale">
-          <a href="./index.html" aria-current="page">Home</a>
-          <details class="nav-dropdown">
-            <summary>Animazioni</summary>
-            <div class="nav-dropdown-menu">
-              <a href="./animazioni/anim1.html">Animazione 01</a>
-              <a href="./animazioni/anim2.html">Animazione 02</a>
-            </div>
-          </details>
-        </nav>
-      </header>
+      <site-header data-base-path="./" data-current="home"></site-header>
 
       <main>
         <section class="hero-panel">
@@ -49,6 +38,16 @@
               Viewer 3D del modello GLB con Draco, illuminazione morbida e interazione sul modello.
             </p>
             <a class="card-link" href="./animazioni/anim2.html">Apri pagina</a>
+          </article>
+
+          <article class="gallery-card accent-forest">
+            <p class="card-index">Asset</p>
+            <h2>Modelli 3D</h2>
+            <p>
+              Pagina dedicata alla libreria dei modelli GLB presenti in public/models, con accesso
+              diretto ai file disponibili nel progetto.
+            </p>
+            <a class="card-link" href="./modelli.html">Apri archivio</a>
           </article>
         </section>
       </main>

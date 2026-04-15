@@ -6,6 +6,10 @@ export default defineConfig({
     rollupOptions: {
       input: {
         home: resolve(__dirname, 'index.html'),
+        models: resolve(__dirname, 'modelli.html'),
+        modelRolex: resolve(__dirname, 'modelli/rolex.html'),
+        modelCoffeeMug: resolve(__dirname, 'modelli/coffee-mug.html'),
+        modelCoffeeMat: resolve(__dirname, 'modelli/coffee-mat.html'),
         anim1: resolve(__dirname, 'animazioni/anim1.html'),
         anim2: resolve(__dirname, 'animazioni/anim2.html')
       }

@@ -5,22 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Animation Vault | Animazione 02</title>
     <link rel="stylesheet" href="../src/style.css" />
+    <script type="module" src="../src/site-header.js"></script>
   </head>
   <body class="animation-page">
     <div class="page-shell">
-      <header class="site-header compact-header">
-        <a class="brand" href="../index.html">Animation Vault</a>
-        <nav class="site-nav" aria-label="Navigazione principale">
-          <a href="../index.html">Home</a>
-          <details class="nav-dropdown nav-dropdown-current" open>
-            <summary>Animazioni</summary>
-            <div class="nav-dropdown-menu">
-              <a href="./anim1.html">Animazione 01</a>
-              <a href="./anim2.html" aria-current="page">Animazione 02</a>
-            </div>
-          </details>
-        </nav>
-      </header>
+      <site-header data-base-path="../" data-current="anim2" data-compact="true"></site-header>
 
       <main class="animation-layout">
         <section class="animation-copy">

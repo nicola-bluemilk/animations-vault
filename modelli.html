@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animation Vault | Modelli</title>
+    <link rel="stylesheet" href="./src/style.css" />
+    <script type="module" src="./src/site-header.js"></script>
+  </head>
+  <body class="models-page">
+    <div class="page-shell">
+      <site-header data-base-path="./" data-current="models" data-compact="true"></site-header>
+
+      <main class="models-layout">
+        <section class="hero-panel models-hero">
+          <p class="eyebrow">Archivio asset</p>
+          <h1>Solo i modelli presenti in public/models.</h1>
+          <p class="hero-copy">
+            Questa pagina raccoglie esclusivamente i file GLB del progetto, con accesso diretto agli
+            asset disponibili per viewer, test o nuove animazioni.
+          </p>
+        </section>
+
+        <section class="models-grid" aria-label="Modelli disponibili">
+          <article class="model-card">
+            <a class="model-card-body" href="./modelli/rolex.html">
+              <p class="card-index">01</p>
+              <h2>Rolex</h2>
+              <p>Modello principale usato nel viewer 3D della seconda animazione.</p>
+              <p class="file-pill">public/models/rolex.glb</p>
+            </a>
+            <div class="model-actions">
+              <a class="card-link" href="./modelli/rolex.html">Apri viewer</a>
+              <a class="card-link secondary-link" href="./models/rolex.glb" target="_blank" rel="noreferrer">Scarica file</a>
+            </div>
+          </article>
+
+          <article class="model-card">
+            <a class="model-card-body" href="./modelli/coffee-mug.html">
+              <p class="card-index">02</p>
+              <h2>Coffee Mug</h2>
+              <p>Asset GLB pronto per futuri test di materiali, luci o scene prodotto.</p>
+              <p class="file-pill">public/models/coffeeMug.glb</p>
+            </a>
+            <div class="model-actions">
+              <a class="card-link" href="./modelli/coffee-mug.html">Apri viewer</a>
+              <a class="card-link secondary-link" href="./models/coffeeMug.glb" target="_blank" rel="noreferrer">Scarica file</a>
+            </div>
+          </article>
+
+          <article class="model-card">
+            <a class="model-card-body" href="./modelli/coffee-mat.html">
+              <p class="card-index">03</p>
+              <h2>Coffee Mat</h2>
+              <p>Accessorio GLB utile per comporre una scena tabletop insieme alla tazza.</p>
+              <p class="file-pill">public/models/coffeemat.glb</p>
+            </a>
+            <div class="model-actions">
+              <a class="card-link" href="./modelli/coffee-mat.html">Apri viewer</a>
+              <a class="card-link secondary-link" href="./models/coffeemat.glb" target="_blank" rel="noreferrer">Scarica file</a>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
