@@ -260,6 +260,12 @@ p {
     rgba(255, 255, 255, 0.75);
 }
 
+.accent-coral {
+  background:
+    linear-gradient(180deg, rgba(255, 238, 235, 0.95), rgba(255, 255, 255, 0.76)),
+    rgba(255, 255, 255, 0.75);
+}
+
 .accent-forest {
   background:
     linear-gradient(180deg, rgba(234, 245, 236, 0.95), rgba(255, 255, 255, 0.76)),

@@ -1,10 +1,10 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-const container = document.getElementById('anim1');
+const container = document.getElementById('anim3');
 
 if (!container) {
-  throw new Error('Container #anim1 non trovato');
+  throw new Error('Container #anim3 non trovato');
 }
 
 function getContainerSize() {
@@ -42,27 +42,41 @@ scene.add(ambient);
 scene.fog = new THREE.FogExp2(0x000000, 0.15);
 
 // MARK: oggetto // Geometry + Material = Mesh
-
-/*
-  MeshBasicMaterial → no luci
-  MeshStandardMaterial → realistico
-*/
-
 const geometry = new THREE.BoxGeometry();
-// const geometry = new THREE.SphereGeometry();
-// const geometry = new THREE.PlaneGeometry();
-// const geometry = new THREE.TorusGeometry();
 
-// const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-// const material = new THREE.MeshStandardMaterial({
-//   color: 0x999150,
-//   roughness: 0.4,
-//   metalness: 0.9
-// });
+const material = new THREE.ShaderMaterial({
+  uniforms: {
+    time: { value: 0 }
+  },
 
-const texture = new THREE.TextureLoader().load('/textures/hardwood.jpg');
-const material = new THREE.MeshStandardMaterial({
-  map: texture
+  vertexShader: `
+    varying vec2 vUv;
+    uniform float time;
+
+    void main() {
+      vUv = uv;
+
+      vec3 pos = position;
+
+      // effetto onda
+      pos.z += sin(pos.x * 5.0 + time) * 0.3;
+
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+    }
+  `,
+
+  fragmentShader: `
+    varying vec2 vUv;
+    uniform float time;
+
+    void main() {
+      float r = 0.5 + 0.5 * sin(time + vUv.x * 5.0);
+      float g = 0.5 + 0.5 * sin(time + vUv.y * 5.0);
+      float b = 0.5 + 0.5 * sin(time);
+
+      gl_FragColor = vec4(r, g, b, 1.0);
+    }
+  `
 });
 
 const cube = new THREE.Mesh(geometry, material);
@@ -87,7 +101,7 @@ renderer.domElement.addEventListener('click', (event) => {
     console.log('cliccato oggetto!');
 
     if (intersects[0].object.material.color) {
-        intersects[0].object.material.color.setHex(Math.random() * 0xffffff);
+      intersects[0].object.material.color.set('red');
     }
   }
 });
@@ -99,6 +113,7 @@ function animate() {
   controls.update();
   cube.rotation.x += 0.005;
   cube.rotation.y += 0.005;
+  material.uniforms.time.value += 0.05;
 
   renderer.render(scene, camera);
 }

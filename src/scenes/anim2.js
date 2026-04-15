@@ -108,7 +108,7 @@ renderer.domElement.addEventListener('click', (event) => {
 
     model.traverse((child) => {
       if (child.isMesh && child.material && child.material.color) {
-        child.material.color.set('red');
+        child.material.color.setHex(Math.random() * 0xffffff);
       }
     });
   }
