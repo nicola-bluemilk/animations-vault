@@ -1,0 +1,244 @@
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+const container = document.getElementById('anim6');
+
+function getSize() {
+  return {
+    width: container.clientWidth || window.innerWidth,
+    height: container.clientHeight || window.innerHeight
+  };
+}
+
+// UI
+const select = document.createElement('select');
+select.style.position = 'absolute';
+select.style.top = '20px';
+select.style.left = '40px';
+select.style.zIndex = '10';
+select.innerHTML = `
+  <option value="realistic">Realistic</option>
+  <option value="stylized">Stylized</option>
+  <option value="ultra">Ultra Realistic</option>
+`;
+container.appendChild(select);
+
+// SCENA
+const scene = new THREE.Scene();
+
+// CAMERA
+const { width, height } = getSize();
+const camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 1000);
+camera.position.set(0, 3, 5);
+
+// RENDERER
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(width, height);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 0.6;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+container.appendChild(renderer.domElement);
+
+// CONTROLS
+const controls = new OrbitControls(camera, renderer.domElement);
+
+// 🌍 HDRI ENV MAP
+new RGBELoader().load(
+  'https://threejs.org/examples/textures/equirectangular/royal_esplanade_1k.hdr',
+  (hdr) => {
+    hdr.mapping = THREE.EquirectangularReflectionMapping;
+    scene.environment = hdr;
+    scene.background = hdr;
+  }
+);
+
+// 🌊 NORMAL MAP
+const normalMap = new THREE.TextureLoader().load(
+  'https://threejs.org/examples/textures/waternormals.jpg'
+);
+normalMap.wrapS = normalMap.wrapT = THREE.RepeatWrapping;
+
+// 🌈 CAUSTICS TEXTURE
+const caustics = new THREE.TextureLoader().load(
+  'https://threejs.org/examples/textures/caustics.png'
+);
+caustics.wrapS = caustics.wrapT = THREE.RepeatWrapping;
+
+// GEOMETRIA
+const geometry = new THREE.PlaneGeometry(10, 10, 200, 200);
+
+// SHADER
+const material = new THREE.ShaderMaterial({
+  uniforms: {
+    time: { value: 0 },
+    mode: { value: 0 },
+    cameraPos: { value: camera.position },
+    normalMap: { value: normalMap },
+    causticsMap: { value: caustics }
+  },
+
+  vertexShader: `
+    varying vec2 vUv;
+    varying vec3 vWorldPosition;
+
+    uniform float time;
+
+    void main() {
+      vUv = uv;
+
+      vec3 pos = position;
+
+      float wave = sin(pos.x * 2.0 + time) * 0.2;
+      pos.z += wave;
+
+      vec4 worldPos = modelMatrix * vec4(pos, 1.0);
+      vWorldPosition = worldPos.xyz;
+
+      gl_Position = projectionMatrix * viewMatrix * worldPos;
+    }
+  `,
+
+  fragmentShader: `
+    varying vec2 vUv;
+    varying vec3 vWorldPosition;
+
+    uniform float time;
+    uniform float mode;
+    uniform vec3 cameraPos;
+    uniform sampler2D normalMap;
+    uniform sampler2D causticsMap;
+
+    void main() {
+
+      vec2 uv = vUv;
+
+      // 🌊 NORMAL MAP ANIMATA
+      vec2 uv1 = uv + vec2(time * 0.02, time * 0.01);
+      vec2 uv2 = uv - vec2(time * 0.01, time * 0.02);
+
+      vec3 n1 = texture2D(normalMap, uv1).rgb;
+      vec3 n2 = texture2D(normalMap, uv2).rgb;
+
+      vec3 normal = normalize(n1 + n2 - 1.0);
+
+      // 🌍 VIEW DIR
+      vec3 viewDir = normalize(cameraPos - vWorldPosition);
+
+      float fresnelSoft = pow(1.0 - dot(viewDir, normal), 2.0);
+      // clamp + riduzione intensità
+      fresnelSoft = clamp(fresnelSoft, 0.0, 0.6);
+
+      vec3 color;
+
+      if (mode < 0.5) {
+        float stripes = sin(vUv.x * 30.0 + time * 3.0) * 0.1;
+
+        vec3 base = vec3(0.0, 0.6, 1.0);
+
+        // toon shading
+        float light = dot(normalize(vec3(0.3, 1.0, 0.5)), normal);
+
+        float toon = step(0.5, light);
+
+        color = base * (0.5 + toon * 0.5);
+
+        // glow animato
+        color += stripes;
+
+        // bordo brillante (fresnel stylized)
+        color += fresnelSoft * 0.3;
+      } else if (mode < 1.5) {
+        vec3 base = vec3(0.0, 0.25, 0.45);
+
+        // shading fake (tipo luce)
+        float light = dot(normalize(vec3(0.3, 1.0, 0.5)), normal);
+        light = clamp(light, 0.0, 1.0);
+
+        color = base * (0.5 + light * 0.8);
+
+        // profondità
+        color *= 0.7 + 0.3 * (1.0 - vUv.y);
+
+        // riflesso leggero
+        color += fresnelSoft * 0.1;
+      } else {
+        vec3 deep = vec3(0.0, 0.05, 0.1);
+        vec3 shallow = vec3(0.0, 0.4, 0.6);
+        color = mix(shallow, deep, uv.y);
+
+        // riflesso HDRI fake
+        vec3 sky = vec3(0.5, 0.7, 1.0);
+        color = mix(color, sky, fresnelSoft * 0.4);
+      }
+
+      // 🌈 CAUSTICS
+      vec2 causticUV = uv * 5.0 + time * 0.1;
+      float caustic = texture2D(causticsMap, causticUV).r;
+
+      color += caustic * 0.2;
+
+      gl_FragColor = vec4(color, 1.0);
+      color = pow(color, vec3(0.85));
+    }
+  `
+});
+
+const water = new THREE.Mesh(geometry, material);
+water.rotation.x = -Math.PI / 2;
+scene.add(water);
+
+// 💡 LUCE
+const light = new THREE.DirectionalLight(0xffffff, 2);
+light.position.set(5,5,5);
+scene.add(light);
+
+// ✨ POST PROCESSING (BLOOM)
+const composer = new EffectComposer(renderer);
+
+composer.addPass(new RenderPass(scene, camera));
+
+const bloom = new UnrealBloomPass(
+  new THREE.Vector2(width, height),
+  1.2,
+  0.4,
+  0.85
+);
+
+composer.addPass(bloom);
+
+// UI MODE SWITCH
+select.addEventListener('change', () => {
+  if (select.value === 'realistic') material.uniforms.mode.value = 0;
+  else if (select.value === 'stylized') material.uniforms.mode.value = 1;
+  else material.uniforms.mode.value = 2;
+});
+
+// LOOP
+function animate() {
+  requestAnimationFrame(animate);
+
+  controls.update();
+
+  material.uniforms.time.value += 0.02;
+  material.uniforms.cameraPos.value.copy(camera.position);
+
+  composer.render();
+}
+
+animate();
+
+// RESIZE
+window.addEventListener('resize', () => {
+  const { width, height } = getSize();
+
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(width, height);
+  composer.setSize(width, height);
+});
