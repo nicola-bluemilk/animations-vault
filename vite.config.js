@@ -12,7 +12,9 @@ export default defineConfig({
         modelCoffeeMat: resolve(__dirname, 'modelli/coffee-mat.html'),
         anim1: resolve(__dirname, 'animazioni/anim1.html'),
         anim2: resolve(__dirname, 'animazioni/anim2.html'),
-        anim3: resolve(__dirname, 'animazioni/anim3.html')
+        anim3: resolve(__dirname, 'animazioni/anim3.html'),
+        anim4: resolve(__dirname, 'animazioni/anim4.html'),
+        anim5: resolve(__dirname, 'animazioni/anim5.html')
       }
     }
   }

@@ -266,6 +266,18 @@ p {
     rgba(255, 255, 255, 0.75);
 }
 
+.accent-mint {
+  background:
+    linear-gradient(180deg, rgba(232, 247, 241, 0.95), rgba(255, 255, 255, 0.76)),
+    rgba(255, 255, 255, 0.75);
+}
+
+.accent-gold {
+  background:
+    linear-gradient(180deg, rgba(250, 242, 222, 0.95), rgba(255, 255, 255, 0.76)),
+    rgba(255, 255, 255, 0.75);
+}
+
 .accent-forest {
   background:
     linear-gradient(180deg, rgba(234, 245, 236, 0.95), rgba(255, 255, 255, 0.76)),
@@ -327,6 +339,72 @@ p {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.hotspot-overlay,
+.hotspot-lines {
+  position: absolute;
+  inset: 0;
+}
+
+.hotspot-overlay {
+  pointer-events: none;
+  z-index: 8;
+}
+
+.hotspot-lines {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hotspot-line {
+  display: none;
+  stroke: rgba(212, 92, 45, 0.9);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 6 8;
+}
+
+.hotspot-panel {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: min(320px, calc(100% - 48px));
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid rgba(36, 25, 15, 0.12);
+  border-radius: 24px;
+  background: rgba(255, 251, 245, 0.94);
+  box-shadow: 0 18px 40px rgba(52, 35, 17, 0.14);
+  backdrop-filter: blur(14px);
+  pointer-events: auto;
+}
+
+.hotspot-panel[hidden] {
+  display: none;
+}
+
+.hotspot-title {
+  margin: 0;
+  font-size: 1.55rem;
+}
+
+.hotspot-body {
+  color: var(--muted);
+}
+
+.hotspot-close {
+  align-self: flex-end;
+  padding: 8px 12px;
+  border: 1px solid rgba(36, 25, 15, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
 }
 
 .light-stage {
@@ -436,6 +514,13 @@ p {
   .animation-stage {
     min-height: 58vh;
   }
+
+  .hotspot-panel {
+    top: auto;
+    right: 16px;
+    bottom: 16px;
+    width: min(300px, calc(100% - 32px));
+  }
 }
 
 @media (max-width: 640px) {
@@ -487,5 +572,11 @@ p {
 
   .animation-stage {
     min-height: 420px;
+  }
+
+  .hotspot-panel {
+    left: 16px;
+    right: 16px;
+    width: auto;
   }
 }
