@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animation Vault | Animazione 02</title>
+    <link rel="stylesheet" href="../src/style.css" />
+  </head>
+  <body class="animation-page">
+    <div class="page-shell">
+      <header class="site-header compact-header">
+        <a class="brand" href="../index.html">Animation Vault</a>
+        <nav class="site-nav" aria-label="Navigazione principale">
+          <a href="../index.html">Home</a>
+          <details class="nav-dropdown nav-dropdown-current" open>
+            <summary>Animazioni</summary>
+            <div class="nav-dropdown-menu">
+              <a href="./anim1.html">Animazione 01</a>
+              <a href="./anim2.html" aria-current="page">Animazione 02</a>
+            </div>
+          </details>
+        </nav>
+      </header>
+
+      <main class="animation-layout">
+        <section class="animation-copy">
+          <p class="eyebrow">Animazione 02</p>
+          <h1>Rolex Viewer</h1>
+          <p>
+            Route separata per il modello GLB, così il viewer resta isolato e facilmente
+            distribuibile come pagina autonoma.
+          </p>
+          <a class="back-link" href="../index.html">Torna alla raccolta</a>
+        </section>
+
+        <section id="anim2" class="animation-stage light-stage" aria-label="Canvas animazione 02"></section>
+      </main>
+    </div>
+
+    <script type="module" src="../src/anim2.js"></script>
+  </body>
+</html>
