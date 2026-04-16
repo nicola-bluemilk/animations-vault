@@ -17,9 +17,14 @@ Questa struttura rende semplice testare una scena isolata, mantenerla separata d
 ## Come funziona
 
 - `index.html` e' la home con card, navigazione e accesso alle singole scene.
+- `modelli.html`, `textures.html` e `hdr.html` sono archivi asset guidati da catalogo.
 - `animazioni/view.html` e' il viewer generico che apre la scena richiesta via query param.
+- `asset/view.html` e' il viewer generico che apre modelli, texture o HDR via query param.
 - `src/scenes/animX.js` contiene logica Three.js, camera, renderer, luci, interazioni e resize.
 - `src/content/animations.js` e' la sorgente unica per nav, gallery e metadati delle scene.
+- `src/content/assets.js` centralizza metadati, categorie, archivi e percorsi per modelli, texture e HDR.
+- I modelli GLB in `public/models/` vengono scoperti automaticamente in build/dev startup; usa override in `src/content/assets.js` se vuoi titolo, descrizione o tag personalizzati.
+- `src/asset-library-page.js` e `src/asset-page.js` rendono archivi e detail view degli asset.
 - `src/site-header.js` gestisce l'header condiviso.
 - `src/style.css` contiene il layout globale e gli stili delle pagine.
 

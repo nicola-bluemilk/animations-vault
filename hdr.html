@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animation Vault | HDRs</title>
+    <link rel="stylesheet" href="./src/style.css" />
+    <script type="module" src="./src/site-header.js"></script>
+    <script type="module" src="./src/asset-library-page.js"></script>
+  </head>
+  <body class="hdr-page">
+    <div class="page-shell">
+      <site-header data-base-path="./" data-current="hdrs" data-compact="true"></site-header>
+
+      <main class="asset-library-layout" data-asset-library data-asset-type="hdrs" data-base-path="./">
+        <section class="hero-panel assets-hero">
+          <p class="eyebrow" data-asset-archive-eyebrow></p>
+          <h1 data-asset-archive-title></h1>
+          <p class="hero-copy" data-asset-archive-description></p>
+        </section>
+
+        <section class="asset-grid" data-asset-grid aria-label="HDR disponibili"></section>
+      </main>
+    </div>
+  </body>
+</html>

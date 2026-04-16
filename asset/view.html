@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Animation Vault | Asset Viewer</title>
+    <link rel="stylesheet" href="../src/style.css" />
+    <script type="module" src="../src/site-header.js"></script>
+  </head>
+  <body class="asset-page">
+    <div class="page-shell">
+      <site-header data-base-path="../" data-current="models" data-compact="true"></site-header>
+
+      <main class="animation-layout">
+        <section class="animation-copy asset-copy-stack">
+          <p class="eyebrow" data-asset-number></p>
+          <h1 data-asset-title></h1>
+          <p data-asset-description></p>
+          <div class="tag-list" data-asset-tags></div>
+          <p class="file-pill" data-asset-path></p>
+          <div class="asset-note" data-asset-note></div>
+          <div class="panel-actions">
+            <a class="card-link" data-asset-download target="_blank" rel="noreferrer">Apri file</a>
+            <a class="back-link" data-asset-back>Torna all'archivio</a>
+          </div>
+        </section>
+
+        <section data-asset-stage class="animation-stage" aria-label="Viewer asset">
+          <div class="stage-status" data-asset-status hidden></div>
+        </section>
+      </main>
+
+      <section class="gallery-section" data-asset-details hidden aria-labelledby="asset-details-title">
+        <div class="section-heading">
+          <p class="eyebrow">Dettagli</p>
+          <h2 id="asset-details-title" data-asset-details-title></h2>
+        </div>
+
+        <div class="asset-detail-grid" data-asset-detail-grid></div>
+      </section>
+    </div>
+
+    <script type="module" src="../src/asset-page.js"></script>
+  </body>
+</html>
