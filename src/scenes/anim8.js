@@ -1,22 +1,12 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { bindResponsiveRenderer, createRenderer, getViewportSize, requireContainer } from '../utils/three-scene.js';
 
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
-const container = document.getElementById('anim8');
-
-if (!container) {
-  throw new Error('Container #anim8 non trovato');
-}
-
-function getContainerSize() {
-  return {
-    width: container.clientWidth || window.innerWidth,
-    height: container.clientHeight || window.innerHeight
-  };
-}
+const container = requireContainer('anim8');
 
 // =====================
 // SCENA
@@ -30,7 +20,7 @@ scene.fog = new THREE.Fog(0x0a0a0f, 2, 12);
 // =====================
 // CAMERA
 // =====================
-const { width, height } = getContainerSize();
+const { width, height } = getViewportSize(container);
 
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -43,17 +33,12 @@ camera.position.set(0, 1.5, 0);
 // =====================
 // RENDERER
 // =====================
-const renderer = new THREE.WebGLRenderer({
+const renderer = createRenderer(container, width, height, {
   antialias: true
 });
-
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(width, height);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.2;
-
-container.appendChild(renderer.domElement);
 
 // =====================
 // LUCI CINEMATICHE
@@ -156,14 +141,11 @@ animate();
 // =====================
 // RESIZE
 // =====================
-window.addEventListener('resize', () => {
-  const { width, height } = getContainerSize();
-
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(width, height);
-
-  composer.setSize(width, height);
+bindResponsiveRenderer({
+  container,
+  camera,
+  renderer,
+  onResize: ({ width, height }) => {
+    composer.setSize(width, height);
+  }
 });

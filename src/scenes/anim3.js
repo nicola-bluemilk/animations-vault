@@ -1,34 +1,20 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { bindResponsiveRenderer, createRenderer, getViewportSize, requireContainer } from '../utils/three-scene.js';
 
-const container = document.getElementById('anim3');
-
-if (!container) {
-  throw new Error('Container #anim3 non trovato');
-}
-
-function getContainerSize() {
-  return {
-    width: container.clientWidth || window.innerWidth,
-    height: container.clientHeight || window.innerHeight
-  };
-}
+const container = requireContainer('anim3');
 
 // MARK: scena
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000000);
 
 // MARK: camera
-const { width, height } = getContainerSize();
+const { width, height } = getViewportSize(container);
 const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
 camera.position.z = 5;
 
 // MARK: renderer
-const renderer = new THREE.WebGLRenderer();
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(width, height);
-renderer.domElement.style.display = 'block';
-container.appendChild(renderer.domElement);
+const renderer = createRenderer(container, width, height);
 
 // MARK: luce
 const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -121,12 +107,4 @@ function animate() {
 animate();
 
 // MARK: resize responsivo
-window.addEventListener('resize', () => {
-  const width = container.clientWidth || window.innerWidth;
-  const height = container.clientHeight || window.innerHeight;
-
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(width, height);
-});
+bindResponsiveRenderer({ container, camera, renderer });

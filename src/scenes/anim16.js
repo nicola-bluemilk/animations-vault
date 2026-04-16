@@ -1,18 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { bindResponsiveRenderer, createRenderer, getViewportSize, requireContainer } from '../utils/three-scene.js';
 
-const container = document.getElementById('anim16');
-
-if (!container) {
-  throw new Error('Container #anim16 non trovato');
-}
-
-function getSize() {
-  return {
-    width: container.clientWidth || window.innerWidth,
-    height: container.clientHeight || window.innerHeight
-  };
-}
+const container = requireContainer('anim16');
 
 function createCausticTexture() {
   const canvas = document.createElement('canvas');
@@ -122,20 +112,16 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x050912);
 scene.fog = new THREE.FogExp2(0x09101b, 0.017);
 
-const { width, height } = getSize();
+const { width, height } = getViewportSize(container);
 const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
 camera.position.set(0.15, 0.95, 7.4);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(width, height);
+const renderer = createRenderer(container, width, height, { antialias: true, alpha: false });
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 0.98;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.domElement.style.display = 'block';
-container.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -472,10 +458,4 @@ function animate() {
 
 animate();
 
-window.addEventListener('resize', () => {
-  const { width, height } = getSize();
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(width, height);
-});
+bindResponsiveRenderer({ container, camera, renderer });

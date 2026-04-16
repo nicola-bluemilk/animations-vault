@@ -1,19 +1,13 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { bindResponsiveRenderer, createRenderer, getViewportSize, requireContainer } from '../utils/three-scene.js';
 
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 
-const container = document.getElementById('anim6');
-
-function getSize() {
-  return {
-    width: container.clientWidth || window.innerWidth,
-    height: container.clientHeight || window.innerHeight
-  };
-}
+const container = requireContainer('anim6');
 
 // UI
 const select = document.createElement('select');
@@ -32,18 +26,16 @@ container.appendChild(select);
 const scene = new THREE.Scene();
 
 // CAMERA
-const { width, height } = getSize();
+const { width, height } = getViewportSize(container);
 const camera = new THREE.PerspectiveCamera(75, width/height, 0.1, 1000);
 camera.position.set(0, 3, 5);
 
 // RENDERER
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(width, height);
+const renderer = createRenderer(container, width, height, { antialias: true });
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 0.6;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.shadowMap.enabled = false;
-container.appendChild(renderer.domElement);
 
 // CONTROLS
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -288,12 +280,12 @@ function animate() {
 animate();
 
 // RESIZE
-window.addEventListener('resize', () => {
-  const { width, height } = getSize();
-
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(width, height);
-  composer.setSize(width, height);
+bindResponsiveRenderer({
+  container,
+  camera,
+  renderer,
+  onResize: ({ width, height }) => {
+    composer.setSize(width, height);
+  },
+  updatePixelRatio: false
 });

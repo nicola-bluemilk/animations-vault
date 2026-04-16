@@ -1,32 +1,18 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { bindResponsiveRenderer, createRenderer, getViewportSize, requireContainer } from '../utils/three-scene.js';
 
-const container = document.getElementById('anim7');
-
-if (!container) {
-  throw new Error('Container #anim7 non trovato');
-}
-
-function getContainerSize() {
-  return {
-    width: container.clientWidth || window.innerWidth,
-    height: container.clientHeight || window.innerHeight
-  };
-}
+const container = requireContainer('anim7');
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x050816);
 scene.fog = new THREE.FogExp2(0x050816, 0.08);
 
-const { width, height } = getContainerSize();
+const { width, height } = getViewportSize(container);
 const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 100);
 camera.position.set(0, 1.2, 5.5);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(width, height);
-renderer.domElement.style.display = 'block';
-container.appendChild(renderer.domElement);
+const renderer = createRenderer(container, width, height, { antialias: true });
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -76,11 +62,4 @@ function animate() {
 
 animate();
 
-window.addEventListener('resize', () => {
-  const { width, height } = getContainerSize();
-
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(width, height);
-});
+bindResponsiveRenderer({ container, camera, renderer });

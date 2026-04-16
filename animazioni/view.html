@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Animation Vault | Animazione 01</title>
+    <title>Animation Vault | Viewer</title>
     <link rel="stylesheet" href="../src/style.css" />
     <script type="module" src="../src/site-header.js"></script>
   </head>
@@ -13,19 +13,16 @@
 
       <main class="animation-layout">
         <section class="animation-copy">
-          <p class="eyebrow">Animazione 01</p>
-          <h1>Textured Cube</h1>
-          <p>
-            Pagina dedicata alla scena shader. La home resta leggera, mentre questa route espone
-            solo il canvas e i dettagli utili all’animazione.
-          </p>
+          <p class="eyebrow" data-animation-number></p>
+          <h1 data-animation-title></h1>
+          <p data-animation-description></p>
           <a class="back-link" href="../index.html">Torna alla raccolta</a>
         </section>
 
-        <section id="anim1" class="animation-stage" aria-label="Canvas animazione 01"></section>
+        <section data-animation-stage class="animation-stage" aria-label="Canvas animazione"></section>
       </main>
     </div>
 
-    <script type="module" src="../src/scenes/anim1.js"></script>
+    <script type="module" src="../src/animation-page.js"></script>
   </body>
 </html>

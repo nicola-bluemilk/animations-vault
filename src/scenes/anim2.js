@@ -1,27 +1,16 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { addSoftStudioLights, createSharedGltfLoader, frameObject } from '../utils/gltf-viewer.js';
+import { bindResponsiveRenderer, createRenderer, getViewportSize, requireContainer } from '../utils/three-scene.js';
 
-const container = document.getElementById('anim2');
-
-if (!container) {
-  throw new Error('Container #anim2 non trovato');
-}
-
-function getContainerSize() {
-  return {
-    width: container.clientWidth || window.innerWidth,
-    height: container.clientHeight || window.innerHeight
-  };
-}
+const container = requireContainer('anim2');
 
 // MARK: scena
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xf5f1e8);
 
 // MARK: camera
-const { width, height } = getContainerSize();
+const { width, height } = getViewportSize(container);
 const camera = new THREE.PerspectiveCamera(
   75,
   width / height,
@@ -31,53 +20,25 @@ const camera = new THREE.PerspectiveCamera(
 camera.position.z = 5;
 
 // MARK: renderer
-const renderer = new THREE.WebGLRenderer();
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(width, height);
-renderer.domElement.style.display = 'block';
-container.appendChild(renderer.domElement);
+const renderer = createRenderer(container, width, height);
 
 // MARK: luce
-const light = new THREE.DirectionalLight(0xffffff, 2);
-light.position.set(5, 5, 5);
-scene.add(light);
-
-const ambient = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(ambient);
+const { keyLight, ambient } = addSoftStudioLights(scene);
+keyLight.intensity = 2;
+ambient.intensity = 0.5;
 
 // MARK VFX
 // scene.fog = new THREE.FogExp2(0x000000, 0.15);
 
 // MARK: MODELLO GLB
-const dracoLoader = new DRACOLoader();
-dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
-
-const loader = new GLTFLoader();
-loader.setDRACOLoader(dracoLoader);
+const { loader, dracoLoader, ktx2Loader } = createSharedGltfLoader(renderer);
 
 let model = null;
 
 loader.load('/models/rolex.glb', (gltf) => {
   model = gltf.scene;
 
-  // centra il modello
-  const box = new THREE.Box3().setFromObject(model);
-  const center = box.getCenter(new THREE.Vector3());
-  model.position.sub(center);
-
-  const size = box.getSize(new THREE.Vector3());
-  const maxDim = Math.max(size.x, size.y, size.z);
-  const fov = THREE.MathUtils.degToRad(camera.fov);
-  const cameraDistance = Math.max((maxDim / 2) / Math.tan(fov / 2) * 1.4, 1.5);
-
-  camera.position.set(0, maxDim * 0.35, cameraDistance);
-  camera.near = Math.max(cameraDistance / 100, 0.01);
-  camera.far = cameraDistance * 100;
-  camera.updateProjectionMatrix();
-  camera.lookAt(0, 0, 0);
-
-  controls.target.set(0, 0, 0);
-  controls.update();
+  frameObject(camera, model, controls);
 
   scene.add(model);
 }, undefined, (error) => {
@@ -131,11 +92,9 @@ function animate() {
 animate();
 
 // MARK: resize responsivo
-window.addEventListener('resize', () => {
-  const { width, height } = getContainerSize();
+bindResponsiveRenderer({ container, camera, renderer });
 
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(width, height);
+window.addEventListener('beforeunload', () => {
+  dracoLoader.dispose();
+  ktx2Loader.dispose();
 });

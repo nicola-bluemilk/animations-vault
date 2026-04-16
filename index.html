@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Animation Vault</title>
     <link rel="stylesheet" href="./src/style.css" />
+    <script type="module" src="./src/home-gallery.js"></script>
     <script type="module" src="./src/site-header.js"></script>
   </head>
   <body class="home-page">
@@ -14,10 +15,10 @@
       <main>
         <section class="hero-panel">
           <p class="eyebrow">Raccolta esportabile</p>
-          <h1>Una home pulita e una pagina dedicata per ogni scena.</h1>
+          <h1>Un catalogo unico per gestire tutte le scene senza boilerplate.</h1>
           <p class="hero-copy">
-            Ogni animazione vive su una route HTML separata, con navigazione condivisa e
-            struttura pronta per crescere senza accumulare scene nella home.
+            Le scene restano separate in file JavaScript autonomi, ma nav, gallery e viewer sono
+            guidati da un catalogo centrale per evitare HTML duplicati e routing manuale.
           </p>
 
           <details class="project-guide">
@@ -40,8 +41,9 @@
                   <h3>Come funziona</h3>
                   <ul>
                     <li>La home raccoglie tutte le animazioni disponibili.</li>
-                    <li>Ogni `animazioni/animX.html` carica una sola scena.</li>
+                    <li>Un solo viewer generico apre qualsiasi scena tramite query param.</li>
                     <li>Ogni `src/scenes/animX.js` contiene la logica Three.js della scena.</li>
+                    <li>Header e card della home leggono lo stesso catalogo centrale.</li>
                     <li>Texture e modelli vivono in `public/textures/` e `public/models/`.</li>
                   </ul>
                 </article>
@@ -76,6 +78,15 @@
                     <li>Gli import `three/examples/jsm/...` devono essere supportati dal bundler finale.</li>
                   </ul>
                 </article>
+
+                <article class="guide-block wide-block">
+                  <h3>Aggiungere una nuova scena qui dentro</h3>
+                  <ol>
+                    <li>Crea `src/scenes/animX.js`.</li>
+                    <li>Aggiungi metadati e descrizione nel catalogo `src/content/animations.js`.</li>
+                    <li>La home, la nav e il viewer la leggono automaticamente.</li>
+                  </ol>
+                </article>
               </div>
             </div>
           </details>
@@ -87,151 +98,7 @@
             <h2 id="scene-section-title">Animazioni separate e riutilizzabili</h2>
           </div>
 
-          <div class="gallery-grid" aria-label="Collezione scene">
-            <article class="gallery-card accent-amber">
-              <p class="card-index">01</p>
-              <h2>Textured Cube</h2>
-              <p>
-                Cubo con texture hardwood, luce direzionale e interazione diretta sul mesh.
-              </p>
-              <a class="card-link" href="./animazioni/anim1.html">Apri pagina</a>
-            </article>
-
-            <article class="gallery-card accent-sky">
-              <p class="card-index">02</p>
-              <h2>Rolex Viewer</h2>
-              <p>
-                Viewer 3D del modello GLB con Draco, illuminazione morbida e interazione sul modello.
-              </p>
-              <a class="card-link" href="./animazioni/anim2.html">Apri pagina</a>
-            </article>
-
-            <article class="gallery-card accent-coral">
-              <p class="card-index">03</p>
-              <h2>Shader Cube</h2>
-              <p>
-                Versione shader con onda animata e variazione cromatica nel fragment shader.
-              </p>
-              <a class="card-link" href="./animazioni/anim3.html">Apri pagina</a>
-            </article>
-
-            <article class="gallery-card accent-mint">
-              <p class="card-index">04</p>
-              <h2>Part Selector</h2>
-              <p>
-                Viewer con raycast su mesh singole, per selezionare una parte alla volta del modello.
-              </p>
-              <a class="card-link" href="./animazioni/anim4.html">Apri pagina</a>
-            </article>
-
-            <article class="gallery-card accent-gold">
-              <p class="card-index">05</p>
-              <h2>Hotspot Notes</h2>
-              <p>
-                Viewer con punti cliccabili, focus sul dettaglio scelto e scheda informativa collegata.
-              </p>
-              <a class="card-link" href="./animazioni/anim5.html">Apri pagina</a>
-            </article>
-
-            <article class="gallery-card accent-sky">
-              <p class="card-index">06</p>
-              <h2>Water Shader</h2>
-              <p>
-                Superficie d’acqua shader con modalita visive selezionabili e resa piu cinematica.
-              </p>
-              <a class="card-link" href="./animazioni/anim6.html">Apri pagina</a>
-            </article>
-
-            <article class="gallery-card accent-coral">
-              <p class="card-index">07</p>
-              <h2>Neon Torus</h2>
-              <p>
-                Toro animato con materiale emissive, doppia luce colorata e navigazione orbitale.
-              </p>
-              <a class="card-link" href="./animazioni/anim7.html">Apri pagina</a>
-            </article>
-
-            <article class="gallery-card accent-mint">
-              <p class="card-index">08</p>
-              <h2>Scena Cinematografica</h2>
-              <p>
-                Scena cinematografica con fog, luci e bloom per una resa piu atmosferica e profonda.
-              </p>
-              <a class="card-link" href="./animazioni/anim8.html">Apri pagina</a>
-            </article>
-
-            <article class="gallery-card accent-gold">
-              <p class="card-index">09</p>
-              <h2>Particle Flow</h2>
-              <p>
-                Campo particellare interattivo con istanze flottanti e deviazione morbida guidata dal mouse.
-              </p>
-              <a class="card-link" href="./animazioni/anim9.html">Apri pagina</a>
-            </article>
-
-            <article class="gallery-card accent-amber">
-              <p class="card-index">10</p>
-              <h2>Coffee Beans River</h2>
-              <p>
-                Flusso continuo di chicchi di caffe in banda orizzontale, con moto organico e lettura visiva da river system.
-              </p>
-              <a class="card-link" href="./animazioni/anim10.html">Apri pagina</a>
-            </article>
-
-            <article class="gallery-card accent-coral">
-              <p class="card-index">11</p>
-              <h2>Coffee Steam Ribbons</h2>
-              <p>
-                Nastri di vapore caldi e morbidi che salgono e si intrecciano sopra una base luminosa, con moto lento e atmosferico.
-              </p>
-              <a class="card-link" href="./animazioni/anim11.html">Apri pagina</a>
-            </article>
-
-            <article class="gallery-card accent-sky">
-              <p class="card-index">12</p>
-              <h2>Liquid Metal Orb</h2>
-              <p>
-                Sfera metallica fluida con micro-deformazioni, riflessi freddi e luce da studio per un look piu premium.
-              </p>
-              <a class="card-link" href="./animazioni/anim12.html">Apri pagina</a>
-            </article>
-
-            <article class="gallery-card accent-mint">
-              <p class="card-index">13</p>
-              <h2>Ribbon Tunnel</h2>
-              <p>
-                Tunnel astratto di nastri luminosi che scorrono in profondita, con torsioni morbide e palette neon piu sintetica.
-              </p>
-              <a class="card-link" href="./animazioni/anim13.html">Apri pagina</a>
-            </article>
-
-            <article class="gallery-card accent-gold">
-              <p class="card-index">14</p>
-              <h2>Shattered Halo</h2>
-              <p>
-                Frammenti sospesi disposti in corona che si aprono e si ricompongono con energia luminosa sul bordo.
-              </p>
-              <a class="card-link" href="./animazioni/anim14.html">Apri pagina</a>
-            </article>
-
-            <article class="gallery-card accent-sky">
-              <p class="card-index">15</p>
-              <h2>Magnetic Filaments</h2>
-              <p>
-                Filamenti tesi tra poli luminosi che si piegano e vibrano come linee di campo magnetico.
-              </p>
-              <a class="card-link" href="./animazioni/anim15.html">Apri pagina</a>
-            </article>
-
-            <article class="gallery-card accent-coral">
-              <p class="card-index">16</p>
-              <h2>Prism Caustics</h2>
-              <p>
-                Prisma sospeso in una camera scura con caustiche cromatiche proiettate su piano e fondale.
-              </p>
-              <a class="card-link" href="./animazioni/anim16.html">Apri pagina</a>
-            </article>
-          </div>
+          <div class="gallery-grid" data-scene-gallery data-base-path="./" aria-label="Collezione scene"></div>
         </section>
 
         <section class="gallery-section" aria-labelledby="asset-section-title">

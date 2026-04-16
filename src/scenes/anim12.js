@@ -1,35 +1,21 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { bindResponsiveRenderer, createRenderer, getViewportSize, requireContainer } from '../utils/three-scene.js';
 
-const container = document.getElementById('anim12');
-
-if (!container) {
-  throw new Error('Container #anim12 non trovato');
-}
-
-function getSize() {
-  return {
-    width: container.clientWidth || window.innerWidth,
-    height: container.clientHeight || window.innerHeight
-  };
-}
+const container = requireContainer('anim12');
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a1120);
 scene.fog = new THREE.FogExp2(0x13203a, 0.026);
 
-const { width, height } = getSize();
+const { width, height } = getViewportSize(container);
 const camera = new THREE.PerspectiveCamera(52, width / height, 0.1, 100);
 camera.position.set(0, 0.35, 5.6);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(width, height);
+const renderer = createRenderer(container, width, height, { antialias: true });
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.0;
-renderer.domElement.style.display = 'block';
-container.appendChild(renderer.domElement);
 
 const modeBadge = document.createElement('div');
 modeBadge.style.position = 'absolute';
@@ -437,11 +423,4 @@ function animate() {
 
 animate();
 
-window.addEventListener('resize', () => {
-  const { width, height } = getSize();
-
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(width, height);
-});
+bindResponsiveRenderer({ container, camera, renderer });

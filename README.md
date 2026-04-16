@@ -1,6 +1,6 @@
 # Animation Vault
 
-Raccolta di scene Three.js organizzate come pagine HTML separate, ciascuna con il proprio file JavaScript, layout condiviso e asset centralizzati.
+Raccolta di scene Three.js organizzate con un viewer generico, file scena separati e catalogo centrale per evitare boilerplate ripetuto.
 
 ## Cos'e questo progetto
 
@@ -8,8 +8,8 @@ Questo repository e' un catalogo di animazioni web costruite con Vite e Three.js
 
 Ogni animazione vive in modo indipendente:
 
-- una pagina dedicata in `animazioni/`
 - un file scena dedicato in `src/scenes/`
+- una voce nel catalogo in `src/content/animations.js`
 - eventuali asset condivisi in `public/textures/` o `public/models/`
 
 Questa struttura rende semplice testare una scena isolata, mantenerla separata dalle altre e riutilizzarla in un progetto diverso.
@@ -17,8 +17,9 @@ Questa struttura rende semplice testare una scena isolata, mantenerla separata d
 ## Come funziona
 
 - `index.html` e' la home con card, navigazione e accesso alle singole scene.
-- `animazioni/animX.html` monta una sola animazione per pagina.
+- `animazioni/view.html` e' il viewer generico che apre la scena richiesta via query param.
 - `src/scenes/animX.js` contiene logica Three.js, camera, renderer, luci, interazioni e resize.
+- `src/content/animations.js` e' la sorgente unica per nav, gallery e metadati delle scene.
 - `src/site-header.js` gestisce l'header condiviso.
 - `src/style.css` contiene il layout globale e gli stili delle pagine.
 
@@ -91,10 +92,9 @@ Le animazioni sono gia separate, quindi puoi portarne una sola senza copiare tut
 
 ## Nota pratica
 
-Se aggiungi una nuova animazione in questo repo, in genere servono questi aggiornamenti:
+Se aggiungi una nuova animazione in questo repo, in genere servono solo questi aggiornamenti:
 
 1. crea `src/scenes/animX.js`
-2. crea `animazioni/animX.html`
-3. aggiungi la entry in `vite.config.js`
-4. aggiungi il link nella nav condivisa
-5. aggiungi la card nella home
+2. aggiungi la voce nel catalogo `src/content/animations.js`
+
+Nav, home e viewer la useranno automaticamente.

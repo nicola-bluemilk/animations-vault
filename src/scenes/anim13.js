@@ -1,35 +1,21 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { bindResponsiveRenderer, createRenderer, getViewportSize, requireContainer } from '../utils/three-scene.js';
 
-const container = document.getElementById('anim13');
-
-if (!container) {
-  throw new Error('Container #anim13 non trovato');
-}
-
-function getSize() {
-  return {
-    width: container.clientWidth || window.innerWidth,
-    height: container.clientHeight || window.innerHeight
-  };
-}
+const container = requireContainer('anim13');
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x040711);
 scene.fog = new THREE.FogExp2(0x09101d, 0.085);
 
-const { width, height } = getSize();
+const { width, height } = getViewportSize(container);
 const camera = new THREE.PerspectiveCamera(58, width / height, 0.1, 100);
 camera.position.set(0, 0, 9.5);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(width, height);
+const renderer = createRenderer(container, width, height, { antialias: true });
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.05;
-renderer.domElement.style.display = 'block';
-container.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -149,11 +135,4 @@ function animate() {
 
 animate();
 
-window.addEventListener('resize', () => {
-  const { width, height } = getSize();
-
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(width, height);
-});
+bindResponsiveRenderer({ container, camera, renderer });

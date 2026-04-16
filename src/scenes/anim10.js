@@ -1,15 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { bindResponsiveRenderer, createRenderer, getViewportSize, requireContainer } from '../utils/three-scene.js';
 
-const container = document.getElementById('anim10');
-if (!container) throw new Error('Container #anim10 non trovato');
-
-function getSize() {
-  return {
-    width: container.clientWidth || window.innerWidth,
-    height: container.clientHeight || window.innerHeight
-  };
-}
+const container = requireContainer('anim10');
 
 // =====================
 // SCENE (CINEMATIC)
@@ -21,7 +14,7 @@ scene.fog = new THREE.Fog(0x07070a, 2, 18);
 // =====================
 // CAMERA (FILMIC)
 // =====================
-const { width, height } = getSize();
+const { width, height } = getViewportSize(container);
 
 const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 100);
 camera.position.set(0, 0.5, 8);
@@ -29,19 +22,14 @@ camera.position.set(0, 0.5, 8);
 // =====================
 // RENDERER (UNREAL FEEL)
 // =====================
-const renderer = new THREE.WebGLRenderer({
+const renderer = createRenderer(container, width, height, {
   antialias: true,
   alpha: false
 });
 
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(width, height);
-
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.6; // 🔥 importantissimo (prima era troppo scuro)
-
-container.appendChild(renderer.domElement);
 
 // =====================
 // CONTROLS (cinematic feel)
@@ -212,15 +200,4 @@ function animate() {
 
 animate();
 
-// =====================
-// RESIZE
-// =====================
-window.addEventListener('resize', () => {
-  const { width, height } = getSize();
-
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(width, height);
-});
+bindResponsiveRenderer({ container, camera, renderer });
